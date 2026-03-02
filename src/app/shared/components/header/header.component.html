@@ -1,0 +1,22 @@
+<div class="header">
+  <app-logo></app-logo>
+
+  <mat-form-field class="search-field" appearance="outline" subscriptSizing="dynamic">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      type="search"
+      placeholder="Search items…"
+      (input)="onSearch($event)"
+    />
+  </mat-form-field>
+
+  <button
+    mat-icon-button
+    class="theme-toggle"
+    (click)="themeService.toggle()"
+    [matTooltip]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+  >
+    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+</div>

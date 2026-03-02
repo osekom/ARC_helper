@@ -1,0 +1,78 @@
+/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@import "./styles/theme.scss";
+
+@include mat.core();
+
+// ─── Semantic CSS Custom Properties ───────────────────────────────────────────
+:root {
+  --arc-surface:               #E5E5E5;
+  --arc-surface-2:             #F2F2F2;
+  --arc-border:                #C2C2C2;
+  --arc-text-heading:          #002E86;
+  --arc-text-primary-dark:     #00174A;
+  --arc-text-dim:              #616161;
+  --arc-text-sub:              #757575;
+  --arc-text-vendor:           #474747;
+  --arc-primary-icon:          #005AC1;
+  --arc-primary-accent:        #479FE1;
+  --arc-primary-hover-bg:      #D3E5FA;
+  --arc-primary-hover-border:  #74B5EA;
+  --arc-primary-qty:           #0045C0;
+  --arc-secondary-bg:          #C6E1EB;
+  --arc-secondary-border:      #7CB4C8;
+  --arc-secondary-text:        #1A2F3D;
+  --arc-secondary-icon:        #406677;
+  --arc-bench-level:           #2D4B5E;
+  --arc-item-avatar-bg:        #F2F2F2;
+  --arc-header-bg:             #005AC1;
+  --arc-page-bg:               #FAFAFA;
+  --arc-logo-text:             #ECF2FF;
+  --arc-error-text:            #BA1A1A;
+}
+
+html.dark-theme {
+  --arc-surface:               #1E1E1E;
+  --arc-surface-2:             #2A2A2A;
+  --arc-border:                #3D3D3D;
+  --arc-text-heading:          #74B5EA;
+  --arc-text-primary-dark:     #A3CBF2;
+  --arc-text-dim:              #ABABAB;
+  --arc-text-sub:              #888888;
+  --arc-text-vendor:           #BBBBBB;
+  --arc-primary-icon:          #74B5EA;
+  --arc-primary-accent:        #4D9FC2;
+  --arc-primary-hover-bg:      #0F2237;
+  --arc-primary-hover-border:  #479FE1;
+  --arc-primary-qty:           #74B5EA;
+  --arc-secondary-bg:          #0D1E28;
+  --arc-secondary-border:      #406677;
+  --arc-secondary-text:        #7CB4C8;
+  --arc-secondary-icon:        #7CB4C8;
+  --arc-bench-level:           #7CB4C8;
+  --arc-item-avatar-bg:        #2C2C2C;
+  --arc-header-bg:             #003270;
+  --arc-page-bg:               #121212;
+  --arc-logo-text:             #D0E4FF;
+  --arc-error-text:            #FFB4AB;
+}
+
+// ─── Angular Material Themes ───────────────────────────────────────────────────
+html,
+body {
+  height: 100%;
+}
+
+html {
+  @include mat.all-component-themes($light-theme);
+
+  &.dark-theme {
+    @include mat.all-component-themes($dark-theme);
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--arc-page-bg);
+}

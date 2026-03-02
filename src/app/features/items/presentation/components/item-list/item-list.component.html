@@ -1,0 +1,19 @@
+<div class="grid-container">
+  @for(item of items(); track item.id){
+  <a class="item-card" [routerLink]="item.id">
+    <div class="card-img-wrap">
+      <img [src]="item.imageFilename" [alt]="getName(item)" class="item-avatar" />
+    </div>
+    <div class="card-body">
+      <span class="item-name">{{ getName(item) }}</span>
+      <span class="item-type">{{ item.type }}</span>
+      <div class="item-chips">
+        <span [class]="'chip rarity rarity-' + item.rarity.toLowerCase()">{{ item.rarity }}</span>
+        <span class="chip value">{{ item.value }} pts</span>
+      </div>
+    </div>
+  </a>
+  } @empty {
+  <p class="empty-msg">No items found. Make sure the data volume is mounted.</p>
+  }
+</div>

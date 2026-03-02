@@ -1,0 +1,34 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--arc-header-bg);
+  gap: 1rem;
+}
+
+.search-field {
+  flex: 1;
+  max-width: 480px;
+
+  // Override Material colours for the dark toolbar background
+  --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.5);
+  --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.8);
+  --mdc-outlined-text-field-focus-outline-color: #fff;
+  --mdc-outlined-text-field-input-text-color: #fff;
+  --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.7);
+  --mdc-outlined-text-field-focus-label-text-color: #fff;
+
+  mat-icon {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.theme-toggle {
+  color: #fff;
+  flex-shrink: 0;
+}

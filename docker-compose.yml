@@ -1,0 +1,7 @@
+services:
+  arc-helper:
+    build: .
+    container_name: arc-helper
+    ports:
+      - "8080:80"
+    restart: unless-stopped

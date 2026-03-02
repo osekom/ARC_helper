@@ -1,0 +1,130 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.item-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--arc-border);
+  border-radius: 8px;
+  background: var(--arc-surface-2);
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--arc-primary-hover-border);
+  }
+}
+
+.card-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--arc-item-avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.item-avatar {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.6rem 0.6rem;
+}
+
+.item-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--arc-text-heading);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-type {
+  font-size: 0.7rem;
+  color: var(--arc-text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.2rem;
+}
+
+.chip {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+.chip.rarity {
+  border: 1px solid;
+}
+
+.rarity-common {
+  background: rgba(160, 160, 160, 0.15);
+  color: #A0A0A0;
+  border-color: #A0A0A0;
+}
+
+.rarity-uncommon {
+  background: rgba(78, 180, 100, 0.15);
+  color: #4EB464;
+  border-color: #4EB464;
+}
+
+.rarity-rare {
+  background: rgba(70, 140, 230, 0.15);
+  color: #468CE6;
+  border-color: #468CE6;
+}
+
+.rarity-epic {
+  background: rgba(160, 80, 220, 0.15);
+  color: #A050DC;
+  border-color: #A050DC;
+}
+
+.rarity-legendary {
+  background: rgba(230, 160, 30, 0.18);
+  color: #E6A01E;
+  border-color: #E6A01E;
+}
+
+.chip.value {
+  background: var(--arc-primary-hover-bg);
+  color: var(--arc-primary-qty);
+  border: 1px solid var(--arc-primary-hover-border);
+}
+
+.empty-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--arc-text-sub);
+  font-style: italic;
+  padding: 2rem;
+}

@@ -1,0 +1,31 @@
+<div class="header">
+  <h5>ARC Items</h5>
+  @if(langService.availableLangs().length > 0){
+  <mat-chip-listbox
+    class="lang-chips"
+    [value]="langService.selectedLang()"
+    (change)="langService.setLang($event.value)"
+  >
+    @for(lang of langService.availableLangs(); track lang){
+    <mat-chip-option [value]="lang">{{ lang }}</mat-chip-option>
+    }
+  </mat-chip-listbox>
+  }
+</div>
+<div class="content">
+  @if(isLoading()){
+  <mat-spinner></mat-spinner>
+  }@else {
+  <app-item-list [items]="items()"></app-item-list>
+  }
+</div>
+<mat-paginator
+  [disabled]="isLoading()"
+  (page)="handlePageEvent($event)"
+  [length]="length()"
+  [pageSize]="100"
+  [pageSizeOptions]="[100, 300, 600]"
+  [showFirstLastButtons]="true"
+  [pageIndex]="pageIndex()"
+>
+</mat-paginator>

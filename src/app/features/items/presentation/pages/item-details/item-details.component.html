@@ -1,0 +1,251 @@
+@if(isLoading()){
+<mat-spinner></mat-spinner>
+} @else if(item()) {
+
+<div class="item-details">
+  <button mat-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> Back to list
+  </button>
+
+  <div class="item-header">
+    <img [src]="item()!.imageFilename" [alt]="getLabel(item()!.name)" class="item-image" />
+    <div class="item-header-info">
+      <h2>{{ getLabel(item()!.name) }}</h2>
+      <p class="description">{{ getLabel(item()!.description) }}</p>
+      <mat-chip-set>
+        <span [class]="'rarity-badge rarity-' + item()!.rarity.toLowerCase()">{{ item()!.rarity }}</span>
+        <mat-chip>{{ item()!.type }}</mat-chip>
+        <mat-chip>v{{ item()!.addedIn }}</mat-chip>
+      </mat-chip-set>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="item-stats">
+    <h5><span class="label">ID: </span>{{ item()!.id }}</h5>
+    <h5><span class="label">Value: </span>{{ item()!.value }} pts</h5>
+    <h5><span class="label">Weight: </span>{{ item()!.weightKg }} kg</h5>
+    <h5><span class="label">Stack size: </span>{{ item()!.stackSize }}</h5>
+    @if(item()!.repairDurability){
+    <h5><span class="label">Repair Durability: </span>{{ item()!.repairDurability }}</h5>
+    }
+    <h5><span class="label">Updated: </span>{{ item()!.updatedAt }}</h5>
+  </div>
+
+  <!-- FOUND IN (drop location) -->
+  @if(item()!.foundIn){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>place</mat-icon> Found in</h5>
+    <div class="found-in-badge">
+      <mat-icon class="found-icon">location_on</mat-icon>
+      {{ item()!.foundIn }}
+    </div>
+  </div>
+  }
+
+  <!-- COMPATIBLE WITH (for modifications) -->
+  @if(item()!.compatibleWith?.length){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>tune</mat-icon> Compatible with</h5>
+    <div class="compat-list">
+      @for(id of item()!.compatibleWith!; track id){
+        @if(resourceItems()[id]; as w){
+        <a [routerLink]="['/items', w.id]" class="ingredient-card">
+          <img [src]="w.imageFilename" class="ingredient-img" [alt]="getLabel(w.name)" />
+          <span class="ingredient-name">{{ getLabel(w.name) }}</span>
+        </a>
+        } @else {
+        <span class="compat-chip">{{ id }}</span>
+        }
+      }
+    </div>
+  </div>
+  }
+
+  <!-- CRAFTING RECIPE -->
+  @if(item()!.recipe){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title">
+      <mat-icon>build</mat-icon>
+      Crafting Recipe
+      @if(item()!.craftBench?.length){
+        <span class="bench-info">
+          — {{ item()!.craftBench!.join(', ') }}
+          @if(item()!.stationLevelRequired){ <span class="bench-level">(Level {{ item()!.stationLevelRequired }})</span> }
+        </span>
+      }
+    </h5>
+    @for(row of recipeRows(); track row.ingredient){
+    <div class="recipe-row">
+      <div class="ingredient-header">
+        @if(row.ingredientItem){
+        <a [routerLink]="['/items', row.ingredientItem.id]" class="ingredient-card">
+          <img [src]="row.ingredientItem.imageFilename" class="ingredient-img" [alt]="getLabel(row.ingredientItem.name)" />
+          <div class="ingredient-info">
+            <span class="ingredient-name">{{ getLabel(row.ingredientItem.name) }}</span>
+            <span class="ingredient-id">{{ row.ingredient }}</span>
+          </div>
+          <span class="ingredient-qty">× {{ row.qty }}</span>
+        </a>
+        } @else {
+        <mat-icon class="ingredient-icon">circle</mat-icon>
+        <strong class="ingredient-name">{{ row.ingredient }}</strong>
+        <span class="ingredient-qty">× {{ row.qty }}</span>
+        }
+      </div>
+      @if(row.sources.length){
+      <div class="ingredient-sources">
+        <span class="sources-label">
+          <mat-icon class="sources-icon">content_cut</mat-icon>
+          Salvage or recycle from:
+        </span>
+        <div class="sources-grid">
+          @for(source of row.sources; track source.id){
+          <a [routerLink]="['/items', source.id]" class="source-chip" [matTooltip]="getLabel(source.name)">
+            <img [src]="source.imageFilename" class="source-img" [alt]="getLabel(source.name)" />
+            <span>{{ getLabel(source.name) }}</span>
+          </a>
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="ingredient-sources">
+        <em class="no-source">No item yields this by salvaging/recycling — loot or buy it.</em>
+      </div>
+      }
+    </div>
+    }
+    @if(!recipeRows().length){
+    <p class="loading-hint">Loading sources…</p>
+    }
+  </div>
+  }
+
+  <!-- VENDORS -->
+  @if(item()!.vendors?.length){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>storefront</mat-icon> Available from vendors</h5>
+    @for(vendor of item()!.vendors!; track vendor.trader){
+    <div class="vendor-row">
+      <mat-icon class="vendor-icon">person</mat-icon>
+      <strong>{{ vendor.trader }}</strong>
+      <span class="vendor-cost">{{ vendorCostStr(vendor) }}</span>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- RECYCLES INTO -->
+  @if(resourceEntries(item()!.recyclesInto).length){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>autorenew</mat-icon> Recycles into</h5>
+    <div class="resource-cards">
+      @for(entry of resourceEntries(item()!.recyclesInto); track entry[0]){
+      @if(resourceItems()[entry[0]]; as res){
+      <a [routerLink]="['/items', res.id]" class="ingredient-card">
+        <img [src]="res.imageFilename" class="ingredient-img" [alt]="getLabel(res.name)" />
+        <div class="ingredient-info">
+          <span class="ingredient-name">{{ getLabel(res.name) }}</span>
+          <span class="ingredient-id">{{ entry[0] }}</span>
+        </div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </a>
+      } @else {
+      <div class="ingredient-card ingredient-card--plain">
+        <div class="ingredient-info"><span class="ingredient-name">{{ entry[0] }}</span></div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </div>
+      }
+      }
+    </div>
+  </div>
+  }
+
+  <!-- SALVAGES INTO -->
+  @if(resourceEntries(item()!.salvagesInto).length){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>content_cut</mat-icon> Salvages into</h5>
+    <div class="resource-cards">
+      @for(entry of resourceEntries(item()!.salvagesInto); track entry[0]){
+      @if(resourceItems()[entry[0]]; as res){
+      <a [routerLink]="['/items', res.id]" class="ingredient-card">
+        <img [src]="res.imageFilename" class="ingredient-img" [alt]="getLabel(res.name)" />
+        <div class="ingredient-info">
+          <span class="ingredient-name">{{ getLabel(res.name) }}</span>
+          <span class="ingredient-id">{{ entry[0] }}</span>
+        </div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </a>
+      } @else {
+      <div class="ingredient-card ingredient-card--plain">
+        <div class="ingredient-info"><span class="ingredient-name">{{ entry[0] }}</span></div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </div>
+      }
+      }
+    </div>
+  </div>
+  }
+
+  <!-- REPAIR COST -->
+  @if(resourceEntries(item()!.repairCost).length){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>handyman</mat-icon> Repair cost</h5>
+    <div class="resource-cards">
+      @for(entry of resourceEntries(item()!.repairCost); track entry[0]){
+      @if(resourceItems()[entry[0]]; as res){
+      <a [routerLink]="['/items', res.id]" class="ingredient-card">
+        <img [src]="res.imageFilename" class="ingredient-img" [alt]="getLabel(res.name)" />
+        <div class="ingredient-info">
+          <span class="ingredient-name">{{ getLabel(res.name) }}</span>
+          <span class="ingredient-id">{{ entry[0] }}</span>
+        </div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </a>
+      } @else {
+      <div class="ingredient-card ingredient-card--plain">
+        <div class="ingredient-info"><span class="ingredient-name">{{ entry[0] }}</span></div>
+        <span class="ingredient-qty">× {{ entry[1] }}</span>
+      </div>
+      }
+      }
+    </div>
+  </div>
+  }
+
+  <!-- NO SOURCE INFO -->
+  @if(!item()!.recipe && !item()!.vendors?.length && !item()!.foundIn){
+  <mat-divider></mat-divider>
+  <div class="item-section">
+    <h5 class="section-title"><mat-icon>help_outline</mat-icon> How to obtain</h5>
+    <p class="no-source-msg">No crafting recipe or vendor available. This item may be obtained through quests, events, or in-raid loot.</p>
+  </div>
+  }
+
+  <mat-divider></mat-divider>
+
+  <div class="lang-selector">
+    <h5>Language:</h5>
+    <mat-chip-listbox
+      [value]="langService.selectedLang()"
+      (change)="langService.setLang($event.value)"
+    >
+      @for(lang of langService.availableLangs(); track lang){
+      <mat-chip-option [value]="lang">{{ lang }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+</div>
+
+} @else {
+<h3>Item not found.</h3>
+}
+
