@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'angular-clean-architecture' title`, () => {
+  it(`should have the 'arc-helper' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-clean-architecture');
+    expect(app.title).toEqual('arc-helper');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, angular-clean-architecture');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, arc-helper');
   });
 });

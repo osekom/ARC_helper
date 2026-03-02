@@ -4,9 +4,9 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy dependency manifests first for better layer caching
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-RUN npm ci
+RUN npm install
 
 # Copy the rest of the source code
 COPY . .
@@ -24,7 +24,7 @@ FROM nginx:alpine AS runner
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the compiled app from the builder stage
-COPY --from=builder /app/dist/angular-clean-architecture/browser /usr/share/nginx/html
+COPY --from=builder /app/dist/arc-helper/browser /usr/share/nginx/html
 
 # Copy custom nginx config to handle Angular routing (HTML5 history API)
 COPY nginx.conf /etc/nginx/conf.d/default.conf

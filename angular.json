@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-clean-architecture": {
+    "arc-helper": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular-clean-architecture",
+            "outputPath": "dist/arc-helper",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-clean-architecture:build:production"
+              "buildTarget": "arc-helper:build:production"
             },
             "development": {
-              "buildTarget": "angular-clean-architecture:build:development"
+              "buildTarget": "arc-helper:build:development"
             }
           },
           "defaultConfiguration": "development"
