@@ -1,17 +1,43 @@
-<div class="header">
-  <h5>ARC Items</h5>
+<div class="filters-row">
   @if(langService.availableLangs().length > 0){
-  <mat-chip-listbox
-    class="lang-chips"
-    [value]="langService.selectedLang()"
-    (change)="langService.setLang($event.value)"
-  >
-    @for(lang of langService.availableLangs(); track lang){
-    <mat-chip-option [value]="lang">{{ lang }}</mat-chip-option>
-    }
-  </mat-chip-listbox>
+  <button mat-stroked-button class="lang-toggle-btn" (click)="toggleLangPanel()">
+    <mat-icon>language</mat-icon>
+    <span>{{ langService.selectedLang() }}</span>
+    <mat-icon>{{ langPanelOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </button>
   }
+  <button mat-stroked-button class="rarity-toggle-btn" (click)="toggleRarityPanel()">
+    <mat-icon>filter_list</mat-icon>
+    <span>{{ selectedRarity() || 'All' }}</span>
+    <mat-icon>{{ rarityPanelOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </button>
+
+  @if(langService.availableLangs().length > 0){
+  <div class="lang-panel" [class.lang-panel--open]="langPanelOpen()">
+    <mat-chip-listbox
+      class="lang-chips"
+      [value]="langService.selectedLang()"
+      (change)="langService.setLang($event.value)"
+    >
+      @for(lang of langService.availableLangs(); track lang){
+      <mat-chip-option [value]="lang">{{ lang }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+  }
+  <div class="rarity-panel" [class.rarity-panel--open]="rarityPanelOpen()">
+    <mat-chip-listbox
+      [value]="selectedRarity()"
+      (change)="selectedRarity.set($event.value ?? '')"
+    >
+      <mat-chip-option value="">All</mat-chip-option>
+      @for(rarity of rarities; track rarity){
+      <mat-chip-option [value]="rarity" [class]="'rarity-chip rarity-' + rarity.toLowerCase()">{{ rarity }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
 </div>
+
 <div class="content">
   @if(isLoading()){
   <mat-spinner></mat-spinner>

@@ -3,6 +3,8 @@ import { Component, OnInit, effect, inject, signal, untracked } from '@angular/c
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import { ItemEntity } from '../../../core/entities/item.entity';
 import { GetItemsUseCase } from '../../../core/use-cases/get-items.use-case';
@@ -12,10 +14,12 @@ import { LanguageService } from '../../../../../shared/services/language.service
 import { ItemListComponent } from '../../components/item-list/item-list.component';
 import { SnackbarService } from '../../../../../shared/services/snackbar.service';
 
+export const RARITIES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+
 @Component({
   selector: 'app-items',
   standalone: true,
-  imports: [MatPaginator, MatProgressSpinner, MatChipsModule, ItemListComponent],
+  imports: [MatPaginator, MatProgressSpinner, MatChipsModule, MatIconModule, MatButtonModule, ItemListComponent],
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.scss'],
 })
@@ -30,27 +34,40 @@ export class ItemsComponent implements OnInit {
   readonly pageIndex = signal(0);
   readonly isLoading = signal(true);
   readonly items = signal<ItemEntity[]>([]);
+  readonly selectedRarity = signal<string>('');
+  readonly langPanelOpen = signal(false);
+  readonly rarityPanelOpen = signal(false);
+  readonly rarities = RARITIES;
 
   constructor() {
     effect(() => {
       const q = this.searchService.query();
+      const rarity = this.selectedRarity();
       const limit = untracked(() => this.pageSize());
       untracked(() => this.pageIndex.set(0));
-      this.loadItems(0, limit, q);
+      this.loadItems(0, limit, q, rarity);
     }, { allowSignalWrites: true });
   }
 
   ngOnInit(): void { /* initial load handled by effect */ }
 
+  toggleLangPanel(): void {
+    this.langPanelOpen.update((v: boolean) => !v);
+  }
+
+  toggleRarityPanel(): void {
+    this.rarityPanelOpen.update((v: boolean) => !v);
+  }
+
   handlePageEvent(e: PageEvent): void {
     this.pageSize.set(e.pageSize);
     this.pageIndex.set(e.pageIndex);
-    this.loadItems(e.pageIndex * e.pageSize, e.pageSize, this.searchService.query());
+    this.loadItems(e.pageIndex * e.pageSize, e.pageSize, this.searchService.query(), this.selectedRarity());
   }
 
-  private loadItems(skip: number, limit: number, search = ''): void {
+  private loadItems(skip: number, limit: number, search = '', rarity = ''): void {
     this.isLoading.set(true);
-    this.getItemsUseCase.execute(skip, limit, search).subscribe({
+    this.getItemsUseCase.execute(skip, limit, search, rarity).subscribe({
       next: ({ items, total }: { items: ItemEntity[]; total: number }) => {
         this.items.set(items);
         this.length.set(total);

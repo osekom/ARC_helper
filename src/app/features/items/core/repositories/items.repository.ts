@@ -9,7 +9,7 @@ export interface ItemsPage {
 
 @Injectable({ providedIn: 'root' })
 export abstract class ItemsRepository {
-  abstract getItems(skip: number, limit: number, search?: string): Observable<ItemsPage>;
+  abstract getItems(skip: number, limit: number, search?: string, rarity?: string): Observable<ItemsPage>;
   abstract getItem(id: string): Observable<ItemEntity | undefined>;
   abstract getItemsByIngredient(ingredientId: string): Observable<ItemEntity[]>;
 }

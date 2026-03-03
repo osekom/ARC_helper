@@ -24,10 +24,10 @@ export class ItemsRepositoryImpl implements ItemsRepository {
     return this.cache$;
   }
 
-  getItems(skip: number, limit: number, search = ''): Observable<ItemsPage> {
+  getItems(skip: number, limit: number, search = '', rarity = ''): Observable<ItemsPage> {
     return this.loadAll().pipe(
       map((items: ItemEntity[]) => {
-        const filtered = search
+        let filtered = search
           ? items.filter((item: ItemEntity) => {
               const q = search.toLowerCase();
               return (
@@ -38,6 +38,11 @@ export class ItemsRepositoryImpl implements ItemsRepository {
               );
             })
           : items;
+        if (rarity) {
+          filtered = filtered.filter(
+            (item: ItemEntity) => (item.rarity ?? '').toLowerCase() === rarity.toLowerCase()
+          );
+        }
         return {
           items: filtered.slice(skip, skip + limit),
           total: filtered.length,

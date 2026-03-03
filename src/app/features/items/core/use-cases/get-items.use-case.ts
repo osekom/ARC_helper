@@ -5,7 +5,7 @@ import { ItemsRepository } from '../repositories/items.repository';
 export class GetItemsUseCase {
   private repo = inject(ItemsRepository);
 
-  execute(skip: number, limit: number, search = '') {
-    return this.repo.getItems(skip, limit, search);
+  execute(skip: number, limit: number, search = '', rarity = '') {
+    return this.repo.getItems(skip, limit, search, rarity);
   }
 }
